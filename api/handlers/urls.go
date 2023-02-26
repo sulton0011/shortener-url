@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	hp "net/http"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
@@ -87,13 +89,30 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 // @Response 400 {object} string "Invalid Argument"
 // @Failure 500 {object} string "Server Error"
 func (h *Handler) GetUrlByShort(c *gin.Context) {
-
+	var (
+		isNil bool
+		resp  *v1.GetUrlResponse
+	)
 	short_url := c.Param("short_url")
 
-	resp, err := h.srvs.Url().GetByShort(c.Value("ctx").(context.Context), &structs.ShortUrl{ShortUrl: short_url})
+	result, err := h.clientRedis.Get(short_url).Result()
 	if err != nil {
-		h.handleResponse(c, http.InternalServerError, err.Error())
-		return
+		fmt.Println(err)
+		isNil = true
+	}
+	if !isNil {
+		err = json.Unmarshal([]byte(result), &resp)
+		if err != nil {
+			fmt.Println("Error while unmarshal in get link by short link", err)
+			isNil = true
+		}
+	}
+	if isNil {
+		resp, err = h.srvs.Url().GetByShort(c.Value("ctx").(context.Context), &structs.ShortUrl{ShortUrl: short_url})
+		if err != nil {
+			h.handleResponse(c, http.InternalServerError, err.Error())
+			return
+		}
 	}
 
 	_, err = h.srvs.Url().Update(c.Value("ctx").(context.Context), &v1.UpdateUrlRequest{
