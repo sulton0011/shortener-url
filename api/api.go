@@ -51,11 +51,12 @@ func SetUpRouter(h handlers.Handler, cfg config.Config) (r *gin.Engine) {
 		v1.GET("/urls/:id", h.HasAccess, h.GetUrlByID)
 
 		v1.PUT("/urls/:id", h.HasAccess, h.UpdateUrl)
-		v1.GET("/urls/:user_id", h.HasAccess, h.GetUrlList)
+		v1.GET("/urls", h.HasAccess, h.GetUrlList)
 
-		// open long url tab
-		v1.GET("/v1/vpn/:short_url", h.HasAccess, h.GetUrlByShort)
 	}
+	// open long url tab
+	r.GET("/:short_url", h.GetUrlByShort)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	return

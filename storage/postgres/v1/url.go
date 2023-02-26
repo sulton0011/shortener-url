@@ -167,7 +167,7 @@ func (r *urlRepo) Update(ctx context.Context, req *v1.UpdateUrlRequest) (resp *v
 	   	updated_at=CURRENT_TIMESTAMP,
 		expires_count=$3,
 		expires_at=$4,
-		used_count=$5,
+		used_count=$5
    	WHERE id=$6`
 	_, err = r.db.Exec(ctx, query,
 		req.Title,

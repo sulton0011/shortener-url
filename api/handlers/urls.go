@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	hp "net/http"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
@@ -76,7 +77,7 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 // GetUrlByShort godoc
 // @ID get_url_by_short
 // @Security ApiKeyAuth
-// @Router /v1/vpn/{short_url} [GET]
+// @Router /{short_url} [GET]
 // @Summary Get urls
 // @Description Get urls
 // @Tags Urls
@@ -87,16 +88,16 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 // @Response 400 {object} string "Invalid Argument"
 // @Failure 500 {object} string "Server Error"
 func (h *Handler) GetUrlByShort(c *gin.Context) {
-
+	fmt.Println("1")
 	short_url := c.Param("short_url")
 
-	resp, err := h.srvs.Url().GetByShort(c.Value("ctx").(context.Context), &structs.ShortUrl{ShortUrl: short_url})
+	resp, err := h.srvs.Url().GetByShort(c.Request.Context(), &structs.ShortUrl{ShortUrl: short_url})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
 		return
 	}
 
-	_, err = h.srvs.Url().Update(c.Value("ctx").(context.Context), &v1.UpdateUrlRequest{
+	_, err = h.srvs.Url().Update(c.Request.Context(), &v1.UpdateUrlRequest{
 		Id:           resp.Id,
 		Title:        resp.Title,
 		ShortUrl:     resp.ShortUrl,
@@ -152,7 +153,8 @@ func (h *Handler) UpdateUrl(c *gin.Context) {
 
 // GetUrlList godoc
 // @ID get_url_list
-// @Router /v1/urls/{user_id} [GET]
+// @Security ApiKeyAuth
+// @Router /v1/urls [GET]
 // @Summary Get url list
 // @Description Get url list
 // @Tags Url
@@ -160,7 +162,6 @@ func (h *Handler) UpdateUrl(c *gin.Context) {
 // @Produce json
 // @Param limit query string false "limit"
 // @Param page query string false "page"
-// @Param user_id path string true "user_id"
 // @Success 200 {object} v1.GetUrlListResponse "GetUrlListResponse"
 // @Response 400 {object} string "Invalid Argument"
 // @Failure 500 {object} string "Server Error"
@@ -176,16 +177,11 @@ func (h *Handler) GetUrlList(c *gin.Context) {
 		h.handleResponse(c, http.InvalidArgument, err.Error())
 		return
 	}
-	user_id := c.Param("user_id")
-	if !util.IsValidUUID(user_id) {
-		h.handleResponse(c, http.InvalidArgument, "id is an invalid uuid")
-		return
-	}
 
 	resp, err := h.srvs.Url().GetList(c.Request.Context(), &structs.ListRequest{
 		Limit: int32(limit),
 		Page:  int32(page),
-		Id:    user_id,
+		Id:    c.Value("ctx").(context.Context).Value("user_id").(string),
 	})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
