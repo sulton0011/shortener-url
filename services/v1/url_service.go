@@ -10,6 +10,7 @@ import (
 	"shortener-url/storage"
 	"shortener-url/structs"
 	structV1 "shortener-url/structs/v1"
+	v1 "shortener-url/structs/v1"
 )
 
 type UrlService struct {
@@ -52,9 +53,48 @@ func (s *UrlService) GetByPK(ctx context.Context, req *structs.ById) (resp *stru
 	if err != nil {
 		return
 	}
-	
+
 	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
 	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
+
+	return
+}
+
+func (s *UrlService) GetByShort(ctx context.Context, req *structs.ShortUrl) (resp *structV1.GetUrlResponse, err error) {
+	defer s.err.Wrap(&err, "GetShort", req)
+	s.err.Info("GetShort", req)
+
+	resp, err = s.strg.Url().GetByShort(ctx, req)
+	if err != nil {
+		return
+	}
+
+	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
+	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
+
+	return
+}
+
+func (s *UrlService) Update(ctx context.Context, req *v1.UpdateUrlRequest) (resp *v1.Message, err error) {
+	defer s.err.Wrap(&err, "Update", req)
+	s.err.Info("Update", req)
+
+	resp, err = s.strg.Url().Update(ctx, req)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (s *UrlService) GetList(ctx context.Context, req *structs.ListRequest) (resp *v1.GetUrlListResponse, err error) {
+	defer s.err.Wrap(&err, "GetAll", req)
+	s.err.Info("GetAll", req)
+
+	resp, err = s.strg.Url().GetAll(ctx, req)
+	if err != nil {
+		return
+	}
 
 	return
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"shortener-url/structs"
 	structV1 "shortener-url/structs/v1"
+	v1 "shortener-url/structs/v1"
 )
 
 type ServiceI interface {
@@ -15,6 +16,9 @@ type ServiceI interface {
 type UrlServiceI interface {
 	Create(ctx context.Context, req *structV1.CreateUrlRequest) (resp *structV1.GetUrlResponse, err error)
 	GetByPK(ctx context.Context, req *structs.ById) (resp *structV1.GetUrlResponse, err error)
+	Update(ctx context.Context, req *v1.UpdateUrlRequest) (resp *v1.Message, err error)
+	GetList(ctx context.Context, req *structs.ListRequest) (resp *v1.GetUrlListResponse, err error)
+	GetByShort(ctx context.Context, req *structs.ShortUrl) (resp *structV1.GetUrlResponse, err error)
 }
 
 type SessionServiceI interface {
