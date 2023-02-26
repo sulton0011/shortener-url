@@ -23,9 +23,6 @@ const (
 )
 
 const (
-	// PkgCronJob     = "CronJobPkg"
-	// PkgIntegration = "IntegrationPkg"
-	// PkgTelegram    = "TelegramPkg"
 	PkgSecurity = "SecurityPkg"
 )
 

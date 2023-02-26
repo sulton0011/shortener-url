@@ -881,9 +881,6 @@ const docTemplate = `{
                 "surname": {
                     "type": "string"
                 },
-                "telegram_username": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 }
