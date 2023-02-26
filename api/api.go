@@ -26,7 +26,7 @@ func SetUpRouter(h handlers.Handler, cfg config.Config) (r *gin.Engine) {
 	// docs.SwaggerInfo.Host = cfg.ServiceHost + cfg.HTTPPort
 	docs.SwaggerInfo.Schemes = []string{cfg.HTTPScheme}
 
-	// r.Use(customCORSMiddleware())
+	r.Use(customCORSMiddleware())
 	// r.Use(h.HasAccessCheck)
 
 	// Default
@@ -38,7 +38,6 @@ func SetUpRouter(h handlers.Handler, cfg config.Config) (r *gin.Engine) {
 
 		// User
 		v1.POST("/user", h.CreateUsers)
-		v1.PUT("/user-token", h.UpdateUser)
 		v1.GET("/user/:id", h.GetUserByID)
 		v1.DELETE("/user/:id", h.DeleteUsers)
 		v1.GET("/user", h.GetUserList)

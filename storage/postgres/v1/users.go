@@ -8,6 +8,7 @@ import (
 	"shortener-url/pkg/errors"
 	"shortener-url/pkg/helper"
 	"shortener-url/pkg/logger"
+	"shortener-url/pkg/util"
 	"shortener-url/storage"
 	"shortener-url/structs"
 	structV1 "shortener-url/structs/v1"
@@ -35,15 +36,17 @@ func (r *UserRepo) CreateUsers(ctx context.Context, req *structV1.CreateUser) (r
 		name,
 		surname,
 		middle_name,
-		telegram_username,
-		phone_number) 
-		VALUES ($1, $2 $3) returning id;`
+		email,
+		login,
+		password) 
+		VALUES ($1, $2 $3, $4, $5, $6, $7) returning id;`
 	err = r.db.QueryRow(ctx, query,
 		req.Name,
 		req.Surname,
 		req.MiddleName,
-		req.TelegramUsername,
-		req.PhoneNumber,
+		req.Email,
+		req.Login,
+		req.Password,
 	).Scan(
 		&id,
 	)
@@ -57,13 +60,17 @@ func (r *UserRepo) CreateUsers(ctx context.Context, req *structV1.CreateUser) (r
 func (r *UserRepo) GetUsersById(ctx context.Context, req *structs.ById) (resp *structV1.GetUsersById, err error) {
 	defer r.err.Wrap(&err, "GetUsersById", req)
 	resp = &structV1.GetUsersById{}
+
+	if !util.IsValidUUID(req.Id) {
+		return resp, errors.New("id not  valid UUID")
+	}
+
 	query := `SELECT 
 		id,
 		name,
 		surname,
 		middle_name,
-		telegram_username,
-		phone_number,
+		email,
 		created_at,
 		updated_at
 	FROM users WHERE id = $1`
@@ -75,8 +82,7 @@ func (r *UserRepo) GetUsersById(ctx context.Context, req *structs.ById) (resp *s
 		&resp.Name,
 		&resp.Surname,
 		&resp.MiddleName,
-		&resp.TelegramUsername,
-		&resp.PhoneNumber,
+		&resp.Email,
 		&createdAt,
 		&updatedAt,
 	)
@@ -91,7 +97,6 @@ func (r *UserRepo) GetUsersById(ctx context.Context, req *structs.ById) (resp *s
 	}
 	return resp, nil
 }
-
 
 func (r *UserRepo) DeleteUsers(ctx context.Context, req *structs.ById) (err error) {
 	defer r.err.Wrap(&err, "DeleteUsers", req)
@@ -118,8 +123,7 @@ func (r *UserRepo) GetUserList(ctx context.Context, req *structs.ListRequest) (r
 		name,
 		surname,
 		middle_name,
-		telegram_username,
-		phone_number,
+		email,
 		created_at,
 		updated_at
 	FROM "users"`
@@ -167,8 +171,7 @@ func (r *UserRepo) GetUserList(ctx context.Context, req *structs.ListRequest) (r
 			&user.Name,
 			&user.Surname,
 			&user.MiddleName,
-			&user.TelegramUsername,
-			&user.PhoneNumber,
+			&user.Email,
 			&createdAt,
 			&updatedAt,
 		)

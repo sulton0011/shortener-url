@@ -8,10 +8,10 @@ ENV_TAG=latest
 
 
 migration-up:
-	migrate -path ./migrations/postgres -database 'postgres://postgres:HcITgK7QaUZz@161.35.152.177:5432/amiin_trading?sslmode=disable' up
+	migrate -path ./migrations/postgres -database 'postgres://postgres:HcITgK7QaUZz@localhost:5432/amiin_trading?sslmode=disable' up
 
 migration-down:
-	migrate -path ./migrations/postgres -database 'postgres://postgres:HcITgK7QaUZz@161.35.152.177:5432/amiin_trading?sslmode=disable' down
+	migrate -path ./migrations/postgres -database 'postgres://postgres:HcITgK7QaUZz@localhost:5432/amiin_trading?sslmode=disable' down
 
 build:
 	CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o ${CURRENT_DIR}/bin/${APP} ${APP_CMD_DIR}/main.go

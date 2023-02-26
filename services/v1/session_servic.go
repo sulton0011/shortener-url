@@ -47,15 +47,14 @@ func (s *SessionService) Login(ctx context.Context, req *structV1.Login) (resp *
 	}
 
 	resp = &structV1.LoginResponse{
-		AccessToken:      accessToken,
-		Id:               respUser.Id,
-		CreatedAt:        respUser.CreatedAt,
-		UpdatedAt:        respUser.UpdatedAt,
-		Name:             respUser.Name,
-		Surname:          respUser.Surname,
-		MiddleName:       respUser.MiddleName,
-		TelegramUsername: respUser.TelegramUsername,
-		PhoneNumber:      respUser.PhoneNumber,
+		AccessToken: accessToken,
+		Id:          respUser.Id,
+		CreatedAt:   respUser.CreatedAt,
+		UpdatedAt:   respUser.UpdatedAt,
+		Name:        respUser.Name,
+		Surname:     respUser.Surname,
+		MiddleName:  respUser.MiddleName,
+		PhoneNumber: respUser.Email,
 	}
 
 	return
