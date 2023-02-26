@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    command: >
+      --save 60 1 --loglevel debug
+    networks:
+      - backend
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - HTTP_PORT=${HTTP_PORT}
+      - HTTP_SCHEME=${HTTP_SCHEME}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - UPLOAD_PATH=/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    volumes:
+      - ${UPLOAD_PATH}:/data
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+      - ./data/nginx/dhparam:/etc/nginx/dhparam
+      - ./data/certbot/conf/:/etc/nginx/ssl/
+      - ./data/certbot/data:/usr/share/nginx/html/letsencrypt
+    depends_on:
+      - backend
+      - certbot
+    networks:
+      - backend
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./data/certbot/conf/:/etc/letsencrypt
+      - ./data/certbot/logs/:/var/log/letsencrypt
+      - ./data/certbot/data:/usr/share/nginx/html/letsencrypt
+
+networks:
+  backend:

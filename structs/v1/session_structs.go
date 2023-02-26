@@ -10,7 +10,6 @@ type LoginResponse struct {
 	Name             string `json:"name"`
 	Surname          string `json:"surname"`
 	MiddleName       string `json:"middle_name"`
-	TelegramUsername string `json:"telegram_username"`
 	PhoneNumber      string `json:"phone_number"`
 	AccessToken      string `json:"access_token"`
 	CreatedAt        string `json:"created_at"`

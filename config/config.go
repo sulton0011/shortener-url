@@ -66,7 +66,7 @@ fmt.Println(envFileName)
 	config.ServiceName = cast.ToString(getOrReturnDefaultValue("SERVICE_NAME", "shortener_url"))
 	config.Environment = cast.ToString(getOrReturnDefaultValue("ENVIRONMENT", DebugMode))
 	config.Version = cast.ToString(getOrReturnDefaultValue("VERSION", "1.0"))
-	config.HTTPPort = cast.ToString(getOrReturnDefaultValue("ANALYTIC_SERVICE_HTTP_PORT", ":90"))
+	config.HTTPPort = cast.ToString(getOrReturnDefaultValue("HTTP_PORT", ":90"))
 	config.HTTPScheme = cast.ToString(getOrReturnDefaultValue("HTTP_SCHEME", "http"))
 
 	config.PostgresHost = cast.ToString(getOrReturnDefaultValue("POSTGRES_HOST", "localhost"))

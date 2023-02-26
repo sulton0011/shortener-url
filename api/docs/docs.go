@@ -599,7 +599,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "expires_count": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "string"
@@ -700,9 +700,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram_username": {
                     "type": "string"
                 },
                 "updated_at": {
