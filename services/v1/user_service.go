@@ -42,12 +42,6 @@ func (s *UserService) GetUsersById(ctx context.Context, req *structs.ById) (resp
 	return
 }
 
-func (s *UserService) UpdateUser(ctx context.Context, req *structV1.UpdateUserToken) (err error) {
-	defer s.err.Wrap(&err, "UpdateUser", req)
-	err = s.strg.User().UpdateUser(ctx, req)
-	return
-}
-
 func (s *UserService) DeleteUsers(ctx context.Context, req *structs.ById) (err error) {
 	defer s.err.Wrap(&err, "DeleteUsers", req)
 	err = s.strg.User().DeleteUsers(ctx, req)

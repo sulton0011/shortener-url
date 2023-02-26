@@ -68,36 +68,6 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// UpdateUser godoc
-// @ID update_user_token
-// @Router /v1/user-token [PUT]
-// @Summary Update User token
-// @Description Update User token
-// @Tags Users
-// @Accept json
-// @Produce json
-// @Param reqBody body v1.UpdateUserToken true "UpdateUserTokenBody"
-// @Success 202 {object} string "Success"
-// @Response 400 {object} string "Invalid Argument"
-// @Failure 500 {object} string "Server Error"
-func (h *Handler) UpdateUser(c *gin.Context) {
-	req := v1.UpdateUserToken{}
-
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		h.handleResponse(c, http.BadRequest, err.Error())
-		return
-	}
-
-	err = h.srvs.User().UpdateUser(c.Request.Context(), &req)
-	if err != nil {
-		h.handleResponse(c, http.InternalServerError, err.Error())
-		return
-	}
-
-	h.handleResponse(c, http.Accepted, "Success")
-}
-
 // DeleteUser godoc
 // @ID delete_user
 // @Router /v1/user/{id} [DELETE]

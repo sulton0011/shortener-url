@@ -272,53 +272,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/user-token": {
-            "put": {
-                "description": "Update User token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update User token",
-                "operationId": "update_user_token",
-                "parameters": [
-                    {
-                        "description": "UpdateUserTokenBody",
-                        "name": "reqBody",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.UpdateUserToken"
-                        }
-                    }
-                ],
-                "responses": {
-                    "202": {
-                        "description": "Success",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid Argument",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/user/{id}": {
             "get": {
                 "description": "Get User",
@@ -472,19 +425,22 @@ const docTemplate = `{
         "v1.CreateUser": {
             "type": "object",
             "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
                 "middle_name": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "phone_number": {
+                "password": {
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram_username": {
                     "type": "string"
                 }
             }
@@ -509,6 +465,9 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -518,13 +477,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "phone_number": {
-                    "type": "string"
-                },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram_username": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -568,14 +521,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "v1.UpdateUserToken": {
-            "type": "object",
-            "properties": {
-                "id": {
                     "type": "string"
                 }
             }

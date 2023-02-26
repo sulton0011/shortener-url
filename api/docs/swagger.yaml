@@ -41,15 +41,17 @@ definitions:
     type: object
   v1.CreateUser:
     properties:
+      email:
+        type: string
+      login:
+        type: string
       middle_name:
         type: string
       name:
         type: string
-      phone_number:
+      password:
         type: string
       surname:
-        type: string
-      telegram_username:
         type: string
     type: object
   v1.GetUserListResponse:
@@ -65,17 +67,15 @@ definitions:
     properties:
       created_at:
         type: string
+      email:
+        type: string
       id:
         type: string
       middle_name:
         type: string
       name:
         type: string
-      phone_number:
-        type: string
       surname:
-        type: string
-      telegram_username:
         type: string
       updated_at:
         type: string
@@ -104,11 +104,6 @@ definitions:
       telegram_username:
         type: string
       updated_at:
-        type: string
-    type: object
-  v1.UpdateUserToken:
-    properties:
-      id:
         type: string
     type: object
 info:
@@ -270,37 +265,6 @@ paths:
           schema:
             type: string
       summary: Create User
-      tags:
-      - Users
-  /v1/user-token:
-    put:
-      consumes:
-      - application/json
-      description: Update User token
-      operationId: update_user_token
-      parameters:
-      - description: UpdateUserTokenBody
-        in: body
-        name: reqBody
-        required: true
-        schema:
-          $ref: '#/definitions/v1.UpdateUserToken'
-      produces:
-      - application/json
-      responses:
-        "202":
-          description: Success
-          schema:
-            type: string
-        "400":
-          description: Invalid Argument
-          schema:
-            type: string
-        "500":
-          description: Server Error
-          schema:
-            type: string
-      summary: Update User token
       tags:
       - Users
   /v1/user/{id}:

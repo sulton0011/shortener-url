@@ -5,10 +5,10 @@ go 1.19
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.0
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/jackc/pgx/v4 v4.18.0
 	github.com/joho/godotenv v1.5.1
-	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cast v1.5.0
 	github.com/streamingfast/logging v0.0.0-20221209193439-bff11742bf4c
 	github.com/swaggo/files v1.0.0
