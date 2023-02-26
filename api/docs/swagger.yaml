@@ -1,0 +1,370 @@
+definitions:
+  config.Config:
+    properties:
+      defaultLimit:
+        type: string
+      defaultPage:
+        type: string
+      environment:
+        description: debug, test, release
+        type: string
+      httpport:
+        type: string
+      httpscheme:
+        type: string
+      postgresDatabase:
+        type: string
+      postgresHost:
+        type: string
+      postgresMaxConnections:
+        type: integer
+      postgresPassword:
+        type: string
+      postgresPort:
+        type: integer
+      postgresUser:
+        type: string
+      secretKey:
+        type: string
+      serviceName:
+        type: string
+      version:
+        type: string
+    type: object
+  http.Response:
+    properties:
+      data: {}
+      description:
+        type: string
+      status:
+        type: string
+    type: object
+  v1.CreateUser:
+    properties:
+      middle_name:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      surname:
+        type: string
+      telegram_username:
+        type: string
+    type: object
+  v1.GetUserListResponse:
+    properties:
+      count:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/v1.GetUsersById'
+        type: array
+    type: object
+  v1.GetUsersById:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      middle_name:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      surname:
+        type: string
+      telegram_username:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  v1.Login:
+    properties:
+      id:
+        type: string
+    type: object
+  v1.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      middle_name:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      surname:
+        type: string
+      telegram_username:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  v1.UpdateUserToken:
+    properties:
+      id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a api gateway
+  termsOfService: amiin_ticker
+paths:
+  /config:
+    get:
+      consumes:
+      - application/json
+      description: show service config data when the service environment set to debug
+        mode
+      operationId: get_config
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/config.Config'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Response'
+      summary: get config data on the debug mode
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: this returns "pong" messsage to show service is working
+      operationId: ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Response'
+      summary: returns "pong" message
+  /v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      operationId: login
+      parameters:
+      - description: LoginRequestBody
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/v1.Login'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Login
+      tags:
+      - Session
+  /v1/user:
+    get:
+      consumes:
+      - application/json
+      description: Get user list
+      operationId: get_user_list
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUserListResponseBody
+          schema:
+            $ref: '#/definitions/v1.GetUserListResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      summary: Get user list
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create User
+      operationId: create_user
+      parameters:
+      - description: CreateUserBody
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: GetUsersByIdBody
+          schema:
+            $ref: '#/definitions/v1.GetUsersById'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      summary: Create User
+      tags:
+      - Users
+  /v1/user-token:
+    put:
+      consumes:
+      - application/json
+      description: Update User token
+      operationId: update_user_token
+      parameters:
+      - description: UpdateUserTokenBody
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UpdateUserToken'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Success
+          schema:
+            type: string
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      summary: Update User token
+      tags:
+      - Users
+  /v1/user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User
+      operationId: delete_user
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Success
+          schema:
+            type: string
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      summary: Delete User
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Get User
+      operationId: get_user_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUsersByIdBody
+          schema:
+            $ref: '#/definitions/v1.GetUsersById'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      summary: Get User
+      tags:
+      - Users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
