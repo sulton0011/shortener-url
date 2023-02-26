@@ -5,7 +5,7 @@ type CreateUrlRequest struct {
 	LongUrl      string `json:"long_url"`
 	ShortUrl     string `json:"short_url"`
 	ExpiresAt    string `json:"expires_at"`
-	ExpiresCount int64 `json:"expires_count"`
+	ExpiresCount int64  `json:"expires_count"`
 }
 
 type CreateUrlResponse struct {
@@ -17,9 +17,9 @@ type UpdateUrlRequest struct {
 	Id           string `json:"id"`
 	Title        string `json:"title"`
 	ShortUrl     string `json:"short_url"`
-	LongUrl      string `json:"long_url"`
 	ExpiresAt    string `json:"expires_at"`
-	ExpiresCount string `json:"expires_count"`
+	ExpiresCount int64 `json:"expires_count"`
+	UsedCount    int64  `json:"used_count"`
 }
 
 type GetUrlResponse struct {
@@ -28,7 +28,7 @@ type GetUrlResponse struct {
 	ShortUrl     string `json:"short_url"`
 	LongUrl      string `json:"long_url"`
 	ExpiresAt    string `json:"expires_at"`
-	ExpiresCount int64 `json:"expires_count"`
+	ExpiresCount int64  `json:"expires_count"`
 	UsedCount    int64  `json:"used_count"`
 	QrCode       []byte `json:"qr_code"`
 	CreatedBy    string `json:"created_by"`
@@ -39,4 +39,8 @@ type GetUrlResponse struct {
 type GetUrlListResponse struct {
 	Count int64            `json:"count"`
 	Urls  []GetUrlResponse `json:"urls"`
+}
+
+type Message struct {
+	Message string `json:"message"`
 }
