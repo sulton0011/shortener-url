@@ -3,6 +3,7 @@ package api
 import (
 	"shortener-url/api/docs"
 	"shortener-url/api/handlers"
+
 	"shortener-url/config"
 
 	"github.com/gin-gonic/gin"

@@ -1,10 +1,11 @@
 package handlers
 
 import (
+	"context"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
 	"shortener-url/structs"
-	"shortener-url/structs/v1"
+	v1 "shortener-url/structs/v1"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,7 +61,7 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.srvs.User().GetUsersById(c.Request.Context(), &structs.ById{Id: id})
+	resp, err := h.srvs.User().GetUsersById(c.Value("ctx").(context.Context), &structs.ById{Id: id})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
 		return
@@ -89,7 +90,7 @@ func (h *Handler) DeleteUsers(c *gin.Context) {
 		return
 	}
 
-	err := h.srvs.User().DeleteUsers(c.Request.Context(), &structs.ById{Id: id})
+	err := h.srvs.User().DeleteUsers(c.Value("ctx").(context.Context), &structs.ById{Id: id})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
 		return

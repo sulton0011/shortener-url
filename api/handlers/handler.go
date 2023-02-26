@@ -114,9 +114,10 @@ func (h *Handler) HasAccess(c *gin.Context) {
 	}
 
 	c.Set("ctx", NewContext(c.Request.Context(), &tokenInfo))
+
 }
 
 func NewContext(r context.Context, u *security.TokenInfo) context.Context {
-
 	return context.WithValue(r, "user_id", u.Id)
+
 }

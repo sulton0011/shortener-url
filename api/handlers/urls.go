@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"context"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
 
@@ -33,10 +33,7 @@ func (h *Handler) CreateUrl(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("context: ", c.Value("ctx"))
-
- 
-	resp, err := h.srvs.Url().Create(c.Request.Context(), &req)
+	resp, err := h.srvs.Url().Create(c.Value("ctx").(context.Context), &req)
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
 		return
@@ -66,7 +63,7 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.srvs.Url().GetByPK(c.Request.Context(), &structs.ById{Id: id})
+	resp, err := h.srvs.Url().GetByPK(c.Value("ctx").(context.Context), &structs.ById{Id: id})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())
 		return
