@@ -49,7 +49,10 @@ func (s *UrlService) GetByPK(ctx context.Context, req *structs.ById) (resp *stru
 	s.err.Info("GetByPK", req)
 
 	resp, err = s.strg.Url().GetByPK(ctx, req)
-
+	if err != nil {
+		return
+	}
+	
 	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
 	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
 

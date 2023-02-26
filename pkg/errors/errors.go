@@ -50,7 +50,7 @@ func (e *ErrorService) Wrap(err *error, funcName string, req interface{}) {
 }
 
 func (e *ErrorService) Info(funcName string, req interface{}) {
-	e.log.Error(msges(config.InfoModel, e.svcsName),
+	e.log.Info(msges(config.InfoModel, e.svcsName),
 		// logger.Any("Service Port", e.svcsPort),
 		logger.Any("request:", req),
 	)

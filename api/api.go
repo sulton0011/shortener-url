@@ -48,7 +48,7 @@ func SetUpRouter(h handlers.Handler, cfg config.Config) (r *gin.Engine) {
 
 		// Urls
 		v1.POST("/urls", h.HasAccess, h.CreateUrl)
-		v1.POST("/urls/:id", h.HasAccess, h.GetUrlByID)
+		v1.GET("/urls/:id", h.HasAccess, h.GetUrlByID)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

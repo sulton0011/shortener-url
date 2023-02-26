@@ -28,7 +28,7 @@ type GetUrlResponse struct {
 	ShortUrl     string `json:"short_url"`
 	LongUrl      string `json:"long_url"`
 	ExpiresAt    string `json:"expires_at"`
-	ExpiresCount string `json:"expires_count"`
+	ExpiresCount int64 `json:"expires_count"`
 	UsedCount    int64  `json:"used_count"`
 	QrCode       []byte `json:"qr_code"`
 	CreatedBy    string `json:"created_by"`
