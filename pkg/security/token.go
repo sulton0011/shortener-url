@@ -66,7 +66,7 @@ func ExtractToken(bearer string) (token string, err error) {
 }
 
 type TokenInfo struct {
-	Id           string
+	Id string
 }
 
 func ParseClaims(token string, secretKey string) (resp TokenInfo, err error) {
@@ -87,7 +87,6 @@ func ParseClaims(token string, secretKey string) (resp TokenInfo, err error) {
 		err = errors.New("cannot parse 'id' field")
 		return resp, err
 	}
-
 
 	return
 }

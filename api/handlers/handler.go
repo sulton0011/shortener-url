@@ -7,6 +7,7 @@ import (
 	"shortener-url/pkg/security"
 	"shortener-url/services"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -47,6 +48,7 @@ func (h *Handler) handleResponse(c *gin.Context, status http.Status, data interf
 			logger.Any("description", status.Description),
 			logger.Any("data", data),
 		)
+		data = GetError(data)
 	default:
 		h.log.Error(
 			"!!!Response--->",
@@ -55,9 +57,23 @@ func (h *Handler) handleResponse(c *gin.Context, status http.Status, data interf
 			logger.Any("description", status.Description),
 			logger.Any("data", data),
 		)
+		data = GetError(data)
 	}
 
-	c.JSON(status.Code, data)
+	c.JSON(status.Code, http.Response{
+		Status:      status.Status,
+		Description: status.Description,
+		Data:        data,
+	})
+}
+
+func GetError(data interface{}) string {
+	switch s := data.(type) {
+	case string:
+		errs := strings.Split(s, config.ErrorStyle)
+		return errs[len(errs)-1]
+	}
+	return ""
 }
 
 func (h *Handler) getPageParam(c *gin.Context) (page int, err error) {
