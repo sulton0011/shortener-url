@@ -5,6 +5,8 @@ import (
 	"shortener-url/config"
 	"shortener-url/pkg/errors"
 	"shortener-url/pkg/logger"
+	"shortener-url/pkg/security"
+	"shortener-url/pkg/util"
 	"shortener-url/services"
 	"shortener-url/storage"
 	"shortener-url/structs"
@@ -29,10 +31,29 @@ func NewUserService(strg storage.StorageI, cfg config.Config, log logger.LoggerI
 
 func (s *UserService) CreateUsers(ctx context.Context, req *structV1.CreateUser) (resp *structV1.GetUsersById, err error) {
 	defer s.err.Wrap(&err, "CreateUsers", req)
+
+	if !util.IsValidEmail(req.Email) {
+		return nil, errors.New("invalid email")
+	}
+
+	if len(req.Login) < 6 {
+		return nil, errors.New("login must not be less than 6 characters")
+	}
+	if len(req.Password) < 6 {
+		return nil, errors.New("password must not be less than 6 characters")
+	}
+
+	hashedPassword, err := security.HashPassword(req.Password)
+	if err != nil {
+		return nil, errors.Wrap(err, "error generating hash password")
+	}
+	req.Password = hashedPassword
+
 	resp, err = s.strg.User().CreateUsers(ctx, req)
 	if err != nil {
 		return
 	}
+	
 	return s.strg.User().GetUsersById(ctx, &structs.ById{Id: resp.Id})
 }
 
