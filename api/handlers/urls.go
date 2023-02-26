@@ -7,6 +7,7 @@ import (
 	hp "net/http"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
+	"time"
 
 	"shortener-url/structs"
 	v1 "shortener-url/structs/v1"
@@ -78,7 +79,7 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 // GetUrlByShort godoc
 // @ID get_url_by_short
 // @Security ApiKeyAuth
-// @Router /v1/vpn/{short_url} [GET]
+// @Router /{short_url} [GET]
 // @Summary Get urls
 // @Description Get urls
 // @Tags Urls
@@ -113,9 +114,17 @@ func (h *Handler) GetUrlByShort(c *gin.Context) {
 			h.handleResponse(c, http.InternalServerError, err.Error())
 			return
 		}
+
+		jsonRes, err := json.Marshal(resp)
+		if err == nil {
+			err = h.clientRedis.Set(resp.ShortUrl, jsonRes, time.Duration(10*time.Minute)).Err()
+			if err != nil {
+				fmt.Println("Error while set short link data: ", err)
+			}
+		}
 	}
 
-	_, err = h.srvs.Url().Update(c.Value("ctx").(context.Context), &v1.UpdateUrlRequest{
+	_, err = h.srvs.Url().Update(c.Request.Context(), &v1.UpdateUrlRequest{
 		Id:           resp.Id,
 		Title:        resp.Title,
 		ShortUrl:     resp.ShortUrl,
@@ -171,7 +180,8 @@ func (h *Handler) UpdateUrl(c *gin.Context) {
 
 // GetUrlList godoc
 // @ID get_url_list
-// @Router /v1/urls/{user_id} [GET]
+// @Security ApiKeyAuth
+// @Router /v1/urls [GET]
 // @Summary Get url list
 // @Description Get url list
 // @Tags Url
@@ -179,7 +189,6 @@ func (h *Handler) UpdateUrl(c *gin.Context) {
 // @Produce json
 // @Param limit query string false "limit"
 // @Param page query string false "page"
-// @Param user_id path string true "user_id"
 // @Success 200 {object} v1.GetUrlListResponse "GetUrlListResponse"
 // @Response 400 {object} string "Invalid Argument"
 // @Failure 500 {object} string "Server Error"
@@ -195,16 +204,11 @@ func (h *Handler) GetUrlList(c *gin.Context) {
 		h.handleResponse(c, http.InvalidArgument, err.Error())
 		return
 	}
-	user_id := c.Param("user_id")
-	if !util.IsValidUUID(user_id) {
-		h.handleResponse(c, http.InvalidArgument, "id is an invalid uuid")
-		return
-	}
 
 	resp, err := h.srvs.Url().GetList(c.Request.Context(), &structs.ListRequest{
 		Limit: int32(limit),
 		Page:  int32(page),
-		Id:    user_id,
+		Id:    c.Value("ctx").(context.Context).Value("user_id").(string),
 	})
 	if err != nil {
 		h.handleResponse(c, http.InternalServerError, err.Error())

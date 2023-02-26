@@ -166,7 +166,7 @@ definitions:
       expires_at:
         type: string
       expires_count:
-        type: string
+        type: integer
       id:
         type: string
       short_url:
@@ -181,6 +181,38 @@ info:
   description: This is a api gateway
   termsOfService: amiin_ticker
 paths:
+  /{short_url}:
+    get:
+      consumes:
+      - application/json
+      description: Get urls
+      operationId: get_url_by_short
+      parameters:
+      - description: short_url
+        in: path
+        name: short_url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUrlResponseBody
+          schema:
+            $ref: '#/definitions/v1.GetUrlResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get urls
+      tags:
+      - Urls
   /config:
     get:
       consumes:
@@ -275,6 +307,40 @@ paths:
       tags:
       - Session
   /v1/urls:
+    get:
+      consumes:
+      - application/json
+      description: Get url list
+      operationId: get_url_list
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUrlListResponse
+          schema:
+            $ref: '#/definitions/v1.GetUrlListResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get url list
+      tags:
+      - Url
     post:
       consumes:
       - application/json
@@ -308,37 +374,6 @@ paths:
       tags:
       - Urls
   /v1/urls/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get urls
-      operationId: get_url_by_id
-      parameters:
-      - description: url id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: GetUrlResponseBody
-          schema:
-            $ref: '#/definitions/v1.GetUrlResponse'
-        "400":
-          description: Invalid Argument
-          schema:
-            type: string
-        "500":
-          description: Server Error
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get urls
-      tags:
-      - Urls
     put:
       consumes:
       - application/json
@@ -376,33 +411,25 @@ paths:
       summary: Put url
       tags:
       - Urls
-  /v1/urls/{user_id}:
+  /v1/urls/by/{id}:
     get:
       consumes:
       - application/json
-      description: Get url list
-      operationId: get_url_list
+      description: Get urls
+      operationId: get_url_by_id
       parameters:
-      - description: limit
-        in: query
-        name: limit
-        type: string
-      - description: page
-        in: query
-        name: page
-        type: string
-      - description: user_id
+      - description: url id
         in: path
-        name: user_id
+        name: id
         required: true
         type: string
       produces:
       - application/json
       responses:
         "200":
-          description: GetUrlListResponse
+          description: GetUrlResponseBody
           schema:
-            $ref: '#/definitions/v1.GetUrlListResponse'
+            $ref: '#/definitions/v1.GetUrlResponse'
         "400":
           description: Invalid Argument
           schema:
@@ -411,9 +438,11 @@ paths:
           description: Server Error
           schema:
             type: string
-      summary: Get url list
+      security:
+      - ApiKeyAuth: []
+      summary: Get urls
       tags:
-      - Url
+      - Urls
   /v1/user:
     get:
       consumes:
@@ -540,38 +569,6 @@ paths:
       summary: Get User
       tags:
       - Users
-  /v1/vpn/{short_url}:
-    get:
-      consumes:
-      - application/json
-      description: Get urls
-      operationId: get_url_by_short
-      parameters:
-      - description: short_url
-        in: path
-        name: short_url
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: GetUrlResponseBody
-          schema:
-            $ref: '#/definitions/v1.GetUrlResponse'
-        "400":
-          description: Invalid Argument
-          schema:
-            type: string
-        "500":
-          description: Server Error
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get urls
-      tags:
-      - Urls
 securityDefinitions:
   ApiKeyAuth:
     in: header
