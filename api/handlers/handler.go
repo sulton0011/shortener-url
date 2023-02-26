@@ -13,14 +13,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
-	"github.com/gorilla/websocket"
 )
 
 type Handler struct {
 	cfg         config.Config
 	log         logger.LoggerI
-	wd          websocket.Dialer
-	wu          websocket.Upgrader
 	srvs        services.ServiceI
 	clientRedis *redis.Client
 	// services client.ServiceManagerI
