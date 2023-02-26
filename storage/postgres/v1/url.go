@@ -3,7 +3,6 @@ package v1
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"shortener-url/config"
 	"shortener-url/pkg/errors"
 	"shortener-url/pkg/helper"
@@ -71,7 +70,7 @@ func (r *urlRepo) GetByPK(ctx context.Context, req *structs.ById) (resp *structV
 		updated_at,
 		used_count
 	from urls where id = $1`
-	fmt.Println(query)
+
 	var (
 		ExpiresAt sql.NullString
 		CreatedAt sql.NullString
@@ -122,7 +121,6 @@ func (r *urlRepo) GetByShort(ctx context.Context, req *structs.ShortUrl) (resp *
 		used_count
 	from urls 
 	where short_url = $1 AND (used_count <= expires_count OR CURRENT_TIMESTAMP < expires_at)`
-	fmt.Println(query)
 	var (
 		ExpiresAt sql.NullString
 		CreatedAt sql.NullString
@@ -204,7 +202,8 @@ func (r *urlRepo) GetAll(ctx context.Context, req *structs.ListRequest) (resp *s
 		created_by,
 		expires_at,
 		created_at,
-		updated_at
+		updated_at,
+		used_count
 	from urls where created_by = :user_id`
 	order := " ORDER BY created_at DESC"
 	limit := " LIMIT 10"
@@ -243,6 +242,7 @@ func (r *urlRepo) GetAll(ctx context.Context, req *structs.ListRequest) (resp *s
 			&ExpiresAt,
 			&CreatedAt,
 			&UpdatedAt,
+			&url.UsedCount,
 		)
 		if err != nil {
 			return nil, errors.Wrap(err, "r.db.Scan")

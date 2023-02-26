@@ -3,7 +3,6 @@ package v1
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"shortener-url/config"
 	"shortener-url/pkg/errors"
 	"shortener-url/pkg/helper"
@@ -180,8 +179,6 @@ func (r *UserRepo) GetUserList(ctx context.Context, req *structs.ListRequest) (r
 	}
 	if req.Limit > 0 {
 		params["limit"] = req.Limit
-		fmt.Println(req.Page)
-		fmt.Println(req.Limit)
 		limit = ` limit :limit`
 	}
 

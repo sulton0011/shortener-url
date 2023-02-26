@@ -282,7 +282,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/urls/by/{id}": {
+        "/v1/urls/{id}": {
             "get": {
                 "security": [
                     {
@@ -330,9 +330,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/v1/urls/{id}": {
+            },
             "put": {
                 "security": [
                     {

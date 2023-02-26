@@ -33,7 +33,7 @@ func NewErrorStorage(log logger.LoggerI, strgName string) *ErrorStorage {
 }
 
 func (e *ErrorService) Wrap(err *error, funcName string, req interface{}) {
-	// fmt.Print(err)
+
 	if *err == nil {
 		return
 	}

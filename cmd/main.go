@@ -49,7 +49,7 @@ func main() {
 		log.Panic("clientRedis", logger.Error(err))
 	}
 
-	fmt.Println("RESULT_REDIS: ", pong)
+	log.Info("RESULT_REDIS: ", logger.Any("ping", pong))
 
 	srvs := serviceV1.NewService(pgStore, cfg, log)
 	h := handlers.NewHandler(cfg, log, srvs, clientRedis)

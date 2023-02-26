@@ -9,7 +9,7 @@ func (g *GetUrlResponse) GetShortUrl(HTTPScheme, host, port string) string {
 	if g == nil {
 		return ""
 	}
-	g.ShortUrl = HTTPScheme + "://" + host + ":" + port + "/" + g.ShortUrl
+	g.ShortUrl = HTTPScheme + "://" + host + port + "/" + g.ShortUrl
 	return g.ShortUrl
 }
 

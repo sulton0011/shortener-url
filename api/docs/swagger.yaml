@@ -374,6 +374,37 @@ paths:
       tags:
       - Urls
   /v1/urls/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get urls
+      operationId: get_url_by_id
+      parameters:
+      - description: url id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUrlResponseBody
+          schema:
+            $ref: '#/definitions/v1.GetUrlResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get urls
+      tags:
+      - Urls
     put:
       consumes:
       - application/json
@@ -409,38 +440,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Put url
-      tags:
-      - Urls
-  /v1/urls/by/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get urls
-      operationId: get_url_by_id
-      parameters:
-      - description: url id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: GetUrlResponseBody
-          schema:
-            $ref: '#/definitions/v1.GetUrlResponse'
-        "400":
-          description: Invalid Argument
-          schema:
-            type: string
-        "500":
-          description: Server Error
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get urls
       tags:
       - Urls
   /v1/user:

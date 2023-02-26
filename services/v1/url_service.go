@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"fmt"
 	"shortener-url/config"
 	"shortener-url/pkg/errors"
 	"shortener-url/pkg/logger"
@@ -37,11 +36,9 @@ func (s *UrlService) Create(ctx context.Context, req *structV1.CreateUrlRequest)
 	if err != nil {
 		return
 	}
-	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
+	resp.GetShortUrl(s.cfg.HTTPScheme, "localhost", s.cfg.HTTPPort)
 	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
 
-	fmt.Println(resp)
-	fmt.Println(err)
 	return
 }
 
@@ -54,7 +51,7 @@ func (s *UrlService) GetByPK(ctx context.Context, req *structs.ById) (resp *stru
 		return
 	}
 
-	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
+	resp.GetShortUrl(s.cfg.HTTPScheme, "localhost", s.cfg.HTTPPort)
 	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
 
 	return
@@ -69,7 +66,7 @@ func (s *UrlService) GetByShort(ctx context.Context, req *structs.ShortUrl) (res
 		return
 	}
 
-	resp.GetShortUrl(s.cfg.HTTPScheme, "0.0.0.0", s.cfg.HTTPPort)
+	resp.GetShortUrl(s.cfg.HTTPScheme, "localhost", s.cfg.HTTPPort)
 	resp.GetQrCode(resp.ShortUrl, config.SizeQrCode)
 
 	return

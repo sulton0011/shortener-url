@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	hp "net/http"
 	"shortener-url/api/http"
 	"shortener-url/pkg/util"
@@ -88,7 +87,6 @@ func (h *Handler) GetUrlByID(c *gin.Context) {
 // @Response 400 {object} string "Invalid Argument"
 // @Failure 500 {object} string "Server Error"
 func (h *Handler) GetUrlByShort(c *gin.Context) {
-	fmt.Println("1")
 	short_url := c.Param("short_url")
 
 	resp, err := h.srvs.Url().GetByShort(c.Request.Context(), &structs.ShortUrl{ShortUrl: short_url})
@@ -157,7 +155,7 @@ func (h *Handler) UpdateUrl(c *gin.Context) {
 // @Router /v1/urls [GET]
 // @Summary Get url list
 // @Description Get url list
-// @Tags Url
+// @Tags Urls
 // @Accept json
 // @Produce json
 // @Param limit query string false "limit"
