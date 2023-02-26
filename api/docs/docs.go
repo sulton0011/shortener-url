@@ -177,6 +177,108 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/urls": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create Urls",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Urls"
+                ],
+                "summary": "Create Urls",
+                "operationId": "create_urls",
+                "parameters": [
+                    {
+                        "description": "CreateUrlRequestBody",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.CreateUrlRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "GetUrlResponseBody",
+                        "schema": {
+                            "$ref": "#/definitions/v1.GetUrlResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Argument",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/urls/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get urls",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Urls"
+                ],
+                "summary": "Get urls",
+                "operationId": "get_url_by_id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "url id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GetUrlResponseBody",
+                        "schema": {
+                            "$ref": "#/definitions/v1.GetUrlResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Argument",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user": {
             "get": {
                 "description": "Get user list",
@@ -274,6 +376,11 @@ const docTemplate = `{
         },
         "/v1/user/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get User",
                 "consumes": [
                     "application/json"
@@ -317,6 +424,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Delete User",
                 "consumes": [
                     "application/json"
@@ -399,6 +511,15 @@ const docTemplate = `{
                 "postgresUser": {
                     "type": "string"
                 },
+                "redisHost": {
+                    "type": "string"
+                },
+                "redisPassword": {
+                    "type": "string"
+                },
+                "redisPort": {
+                    "type": "integer"
+                },
                 "secretKey": {
                     "type": "string"
                 },
@@ -418,6 +539,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.CreateUrlRequest": {
+            "type": "object",
+            "properties": {
+                "expires_at": {
+                    "type": "string"
+                },
+                "expires_count": {
+                    "type": "integer"
+                },
+                "long_url": {
+                    "type": "string"
+                },
+                "short_url": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -442,6 +583,47 @@ const docTemplate = `{
                 },
                 "surname": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.GetUrlResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "expires_at": {
+                    "type": "string"
+                },
+                "expires_count": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "long_url": {
+                    "type": "string"
+                },
+                "qr_code": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "short_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "used_count": {
+                    "type": "integer"
                 }
             }
         },
@@ -488,7 +670,10 @@ const docTemplate = `{
         "v1.Login": {
             "type": "object",
             "properties": {
-                "id": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

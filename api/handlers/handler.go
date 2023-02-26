@@ -1,7 +1,9 @@
 package handlers
 
 import (
-	"shortener-url/api/http"
+	"context"
+
+	http1 "shortener-url/api/http"
 	"shortener-url/config"
 	"shortener-url/pkg/logger"
 	"shortener-url/pkg/security"
@@ -33,7 +35,7 @@ func NewHandler(cfg config.Config, log logger.LoggerI, srvs services.ServiceI, r
 	}
 }
 
-func (h *Handler) handleResponse(c *gin.Context, status http.Status, data interface{}) {
+func (h *Handler) handleResponse(c *gin.Context, status http1.Status, data interface{}) {
 	switch code := status.Code; {
 	case code < 300:
 		h.log.Info(
@@ -63,7 +65,7 @@ func (h *Handler) handleResponse(c *gin.Context, status http.Status, data interf
 		data = GetError(data)
 	}
 
-	c.JSON(status.Code, http.Response{
+	c.JSON(status.Code, http1.Response{
 		Status:      status.Status,
 		Description: status.Description,
 		Data:        data,
@@ -92,25 +94,29 @@ func (h *Handler) getLimitParam(c *gin.Context) (limit int, err error) {
 func (h *Handler) HasAccess(c *gin.Context) {
 	reqToken := c.GetHeader("Authorization")
 	if len(reqToken) < 25 {
-		h.handleResponse(c, http.Forbidden, "token is empty")
+		h.handleResponse(c, http1.Forbidden, "token is empty")
 		c.Abort()
 		return
 	}
 
 	token, err := security.ExtractToken(reqToken)
 	if err != nil {
-		h.handleResponse(c, http.Forbidden, err.Error())
+		h.handleResponse(c, http1.Forbidden, err.Error())
 		c.Abort()
 		return
 	}
 
 	tokenInfo, err := security.ParseClaims(token, h.cfg.SecretKey)
 	if err != nil {
-		h.handleResponse(c, http.Forbidden, err.Error())
+		h.handleResponse(c, http1.Forbidden, err.Error())
 		c.Abort()
 		return
 	}
 
-	c.Set("id", tokenInfo.Id)
+	c.Set("ctx", NewContext(c.Request.Context(), &tokenInfo))
+}
 
+func NewContext(r context.Context, u *security.TokenInfo) context.Context {
+
+	return context.WithValue(r, "user_id", u.Id)
 }

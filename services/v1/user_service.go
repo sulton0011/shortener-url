@@ -31,6 +31,7 @@ func NewUserService(strg storage.StorageI, cfg config.Config, log logger.LoggerI
 
 func (s *UserService) CreateUsers(ctx context.Context, req *structV1.CreateUser) (resp *structV1.GetUsersById, err error) {
 	defer s.err.Wrap(&err, "CreateUsers", req)
+	s.err.Info("CreateUsers", req)
 
 	if !util.IsValidEmail(req.Email) {
 		return nil, errors.New("invalid email")
@@ -53,24 +54,30 @@ func (s *UserService) CreateUsers(ctx context.Context, req *structV1.CreateUser)
 	if err != nil {
 		return
 	}
-	
+
 	return s.strg.User().GetUsersById(ctx, &structs.ById{Id: resp.Id})
 }
 
 func (s *UserService) GetUsersById(ctx context.Context, req *structs.ById) (resp *structV1.GetUsersById, err error) {
 	defer s.err.Wrap(&err, "GetUsersById", req)
+	s.err.Info("GetUsersById", req)
+
 	resp, err = s.strg.User().GetUsersById(ctx, req)
 	return
 }
 
 func (s *UserService) DeleteUsers(ctx context.Context, req *structs.ById) (err error) {
 	defer s.err.Wrap(&err, "DeleteUsers", req)
+	s.err.Info("DeleteUsers", req)
+
 	err = s.strg.User().DeleteUsers(ctx, req)
 	return
 }
 
 func (s *UserService) GetUserList(ctx context.Context, req *structs.ListRequest) (resp *structV1.GetUserListResponse, err error) {
 	defer s.err.Wrap(&err, "GetUserList", req)
+	s.err.Info("GetUserList", req)
+
 	resp, err = s.strg.User().GetUserList(ctx, req)
 	return
 }

@@ -41,6 +41,7 @@ func (h *Handler) CreateUsers(c *gin.Context) {
 
 // GetUserByID godoc
 // @ID get_user_by_id
+// @Security ApiKeyAuth
 // @Router /v1/user/{id} [GET]
 // @Summary Get User
 // @Description Get User
@@ -70,6 +71,7 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 
 // DeleteUser godoc
 // @ID delete_user
+// @Security ApiKeyAuth
 // @Router /v1/user/{id} [DELETE]
 // @Summary Delete User
 // @Description Delete User

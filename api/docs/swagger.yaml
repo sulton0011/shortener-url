@@ -24,6 +24,12 @@ definitions:
         type: integer
       postgresUser:
         type: string
+      redisHost:
+        type: string
+      redisPassword:
+        type: string
+      redisPort:
+        type: integer
       secretKey:
         type: string
       serviceName:
@@ -37,6 +43,19 @@ definitions:
       description:
         type: string
       status:
+        type: string
+    type: object
+  v1.CreateUrlRequest:
+    properties:
+      expires_at:
+        type: string
+      expires_count:
+        type: integer
+      long_url:
+        type: string
+      short_url:
+        type: string
+      title:
         type: string
     type: object
   v1.CreateUser:
@@ -53,6 +72,33 @@ definitions:
         type: string
       surname:
         type: string
+    type: object
+  v1.GetUrlResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      expires_at:
+        type: string
+      expires_count:
+        type: string
+      id:
+        type: string
+      long_url:
+        type: string
+      qr_code:
+        items:
+          type: integer
+        type: array
+      short_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      used_count:
+        type: integer
     type: object
   v1.GetUserListResponse:
     properties:
@@ -82,7 +128,9 @@ definitions:
     type: object
   v1.Login:
     properties:
-      id:
+      login:
+        type: string
+      password:
         type: string
     type: object
   v1.LoginResponse:
@@ -204,6 +252,71 @@ paths:
       summary: Login
       tags:
       - Session
+  /v1/urls:
+    post:
+      consumes:
+      - application/json
+      description: Create Urls
+      operationId: create_urls
+      parameters:
+      - description: CreateUrlRequestBody
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateUrlRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: GetUrlResponseBody
+          schema:
+            $ref: '#/definitions/v1.GetUrlResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create Urls
+      tags:
+      - Urls
+  /v1/urls/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get urls
+      operationId: get_url_by_id
+      parameters:
+      - description: url id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetUrlResponseBody
+          schema:
+            $ref: '#/definitions/v1.GetUrlResponse'
+        "400":
+          description: Invalid Argument
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get urls
+      tags:
+      - Urls
   /v1/user:
     get:
       consumes:
@@ -294,6 +407,8 @@ paths:
           description: Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Delete User
       tags:
       - Users
@@ -323,6 +438,8 @@ paths:
           description: Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Get User
       tags:
       - Users

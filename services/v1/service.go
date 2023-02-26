@@ -26,7 +26,7 @@ func NewService(strg storage.StorageI, cfg config.Config, log logger.LoggerI) se
 }
 
 func (s *Service) Url() services.UrlServiceI {
-	if s.Url == nil {
+	if s.url == nil {
 		return NewUrlService(s.strg, s.cfg, s.log)
 	}
 	return s.url

@@ -8,7 +8,6 @@ import (
 	"shortener-url/pkg/security"
 	"shortener-url/services"
 	"shortener-url/storage"
-	"shortener-url/structs"
 	structV1 "shortener-url/structs/v1"
 )
 
@@ -31,9 +30,26 @@ func NewSessionService(strg storage.StorageI, cfg config.Config, log logger.Logg
 func (s *SessionService) Login(ctx context.Context, req *structV1.Login) (resp *structV1.LoginResponse, err error) {
 	defer s.err.Wrap(&err, "Login", req)
 
-	respUser, err := s.strg.User().GetUsersById(ctx, &structs.ById{Id: req.Id})
+	if len(req.Login) < 6 {
+		return nil, errors.New("invalid login")
+	}
+
+	if len(req.Password) < 6 {
+		return nil, errors.New("invalid password")
+	}
+
+	respUser, err := s.strg.User().GetByLogin(ctx, req.Login)
 	if err != nil {
-		return resp, err
+		return nil, errors.New("login is wrong")
+	}
+
+	match, err := security.ComparePassword(respUser.Password, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	if !match {
+		return nil, errors.New("password is wrong")
 	}
 
 	m := map[string]interface{}{

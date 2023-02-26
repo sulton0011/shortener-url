@@ -17,6 +17,7 @@ const (
 	// ReleaseMode indicates service mode is release.
 	ReleaseMode = "release"
 	ErrorModel  = "!!!Error"
+	InfoModel  = "---Info"
 	ErrorStyle  = "-->"
 
 	// service name
@@ -55,7 +56,7 @@ type Config struct {
 func Load() Config {
 
 	envFileName := cast.ToString(getOrReturnDefaultValue("ENV_FILE_PATH", "./.env"))
-
+fmt.Println(envFileName)
 	if err := godotenv.Load(envFileName); err != nil {
 		fmt.Println("No .env file found")
 	}
@@ -69,9 +70,9 @@ func Load() Config {
 	config.HTTPScheme = cast.ToString(getOrReturnDefaultValue("HTTP_SCHEME", "http"))
 
 	config.PostgresHost = cast.ToString(getOrReturnDefaultValue("POSTGRES_HOST", "localhost"))
-	config.PostgresPort = cast.ToInt(getOrReturnDefaultValue("POSTGRES_PORT", 5432))
+	config.PostgresPort = cast.ToInt(getOrReturnDefaultValue("POSTGRES_PORT", 32768))
 	config.PostgresUser = cast.ToString(getOrReturnDefaultValue("POSTGRES_USER", "postgres"))
-	config.PostgresPassword = cast.ToString(getOrReturnDefaultValue("POSTGRES_PASSWORD", "postgres"))
+	config.PostgresPassword = cast.ToString(getOrReturnDefaultValue("POSTGRES_PASSWORD", "postgrespw"))
 	config.PostgresDatabase = cast.ToString(getOrReturnDefaultValue("POSTGRES_DATABASE", config.ServiceName))
 	config.PostgresMaxConnections = cast.ToInt32(getOrReturnDefaultValue("POSTGRES_MAX_CONNECTIONS", 30))
 

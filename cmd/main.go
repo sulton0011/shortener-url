@@ -24,11 +24,6 @@ func main() {
 		DB:       0,
 	})
 
-	fmt.Println("Redis conf: ", cfg.RedisHost, cfg.RedisPort, cfg.RedisPassword)
-	pong, err := clientRedis.Ping().Result()
-
-	fmt.Println("RESULT_REDIS: ", pong, err)
-
 	switch cfg.Environment {
 	case config.DebugMode:
 		loggerLevel = logger.LevelDebug
@@ -48,6 +43,13 @@ func main() {
 		log.Panic("postgres.NewPostgres", logger.Error(err))
 	}
 	defer pgStore.CloseDB()
+
+	pong, err := clientRedis.Ping().Result()
+	if err != nil {
+		log.Panic("clientRedis", logger.Error(err))
+	}
+
+	fmt.Println("RESULT_REDIS: ", pong)
 
 	srvs := serviceV1.NewService(pgStore, cfg, log)
 	h := handlers.NewHandler(cfg, log, srvs, clientRedis)

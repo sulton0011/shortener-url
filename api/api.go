@@ -38,12 +38,16 @@ func SetUpRouter(h handlers.Handler, cfg config.Config) (r *gin.Engine) {
 
 		// User
 		v1.POST("/user", h.CreateUsers)
-		v1.GET("/user/:id", h.GetUserByID)
-		v1.DELETE("/user/:id", h.DeleteUsers)
+		v1.GET("/user/:id", h.HasAccess, h.GetUserByID)
+		v1.DELETE("/user/:id", h.HasAccess, h.DeleteUsers)
 		v1.GET("/user", h.GetUserList)
 
 		// Login
 		v1.POST("/login", h.Login)
+
+		// Urls
+		v1.POST("/urls", h.HasAccess, h.CreateUrl)
+		v1.POST("/urls/:id", h.HasAccess, h.GetUrlByID)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

@@ -14,6 +14,7 @@ type ServiceI interface {
 
 type UrlServiceI interface {
 	Create(ctx context.Context, req *structV1.CreateUrlRequest) (resp *structV1.GetUrlResponse, err error)
+	GetByPK(ctx context.Context, req *structs.ById) (resp *structV1.GetUrlResponse, err error)
 }
 
 type SessionServiceI interface {

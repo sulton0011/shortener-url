@@ -52,3 +52,10 @@ func IsEmtpy(s interface{}) bool {
 
 	return true
 }
+
+func DefaultValue(s string, value interface{}) interface{} {
+	if s == "" {
+		return value
+	}
+	return s
+}

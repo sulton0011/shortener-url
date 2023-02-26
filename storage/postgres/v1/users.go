@@ -39,7 +39,7 @@ func (r *UserRepo) CreateUsers(ctx context.Context, req *structV1.CreateUser) (r
 		email,
 		login,
 		password) 
-		VALUES ($1, $2 $3, $4, $5, $6, $7) returning id;`
+		VALUES ($1, $2, $3, $4, $5, $6) returning id;`
 	err = r.db.QueryRow(ctx, query,
 		req.Name,
 		req.Surname,
@@ -85,6 +85,47 @@ func (r *UserRepo) GetUsersById(ctx context.Context, req *structs.ById) (resp *s
 		&resp.Email,
 		&createdAt,
 		&updatedAt,
+	)
+	if err != nil {
+		return
+	}
+	if createdAt.Valid {
+		resp.CreatedAt = createdAt.String
+	}
+	if updatedAt.Valid {
+		resp.UpdatedAt = updatedAt.String
+	}
+	return resp, nil
+}
+
+func (r *UserRepo) GetByLogin(ctx context.Context, login string) (resp *structV1.GetUsersByLogin, err error) {
+	defer r.err.Wrap(&err, "GetByLogin", login)
+	resp = &structV1.GetUsersByLogin{}
+
+	query := `SELECT 
+		id,
+		name,
+		surname,
+		middle_name,
+		email,
+		created_at,
+		updated_at,
+		login,
+		password
+	FROM users WHERE login = $1`
+	var (
+		createdAt, updatedAt sql.NullString
+	)
+	err = r.db.QueryRow(ctx, query, login).Scan(
+		&resp.Id,
+		&resp.Name,
+		&resp.Surname,
+		&resp.MiddleName,
+		&resp.Email,
+		&createdAt,
+		&updatedAt,
+		&resp.Login,
+        &resp.Password,
 	)
 	if err != nil {
 		return

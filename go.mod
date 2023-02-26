@@ -6,15 +6,16 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/jackc/pgx/v4 v4.18.0
 	github.com/joho/godotenv v1.5.1
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/cast v1.5.0
 	github.com/streamingfast/logging v0.0.0-20221209193439-bff11742bf4c
 	github.com/swaggo/files v1.0.0
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.10
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.6.0
 )
