@@ -39,7 +39,7 @@ func (r *UserRepo) CreateUsers(ctx context.Context, req *structV1.CreateUser) (r
 		email,
 		login,
 		password) 
-		VALUES ($1, $2 $3, $4, $5, $6, $7) returning id;`
+		VALUES ($1, $2, $3, $4, $5, $6) returning id;`
 	err = r.db.QueryRow(ctx, query,
 		req.Name,
 		req.Surname,
