@@ -9,23 +9,26 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"github.com/gorilla/websocket"
 )
 
 type Handler struct {
-	cfg  config.Config
-	log  logger.LoggerI
-	wd   websocket.Dialer
-	wu   websocket.Upgrader
-	srvs services.ServiceI
+	cfg         config.Config
+	log         logger.LoggerI
+	wd          websocket.Dialer
+	wu          websocket.Upgrader
+	srvs        services.ServiceI
+	clientRedis *redis.Client
 	// services client.ServiceManagerI
 }
 
-func NewHandler(cfg config.Config, log logger.LoggerI, srvs services.ServiceI) Handler {
+func NewHandler(cfg config.Config, log logger.LoggerI, srvs services.ServiceI, redis *redis.Client) Handler {
 	return Handler{
-		cfg:  cfg,
-		log:  log,
-		srvs: srvs,
+		cfg:         cfg,
+		log:         log,
+		srvs:        srvs,
+		clientRedis: redis,
 	}
 }
 
