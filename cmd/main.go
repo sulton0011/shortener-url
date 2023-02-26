@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"shortener-url/api"
 	"shortener-url/api/handlers"
 	"shortener-url/config"
@@ -10,11 +11,23 @@ import (
 	postgresV1 "shortener-url/storage/postgres/v1"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 )
 
 func main() {
 	cfg := config.Load()
 	loggerLevel := logger.LevelDebug
+
+	clientRedis := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", cfg.RedisHost, cfg.RedisPort),
+		Password: cfg.RedisPassword,
+		DB:       0,
+	})
+
+	fmt.Println("Redis conf: ", cfg.RedisHost, cfg.RedisPort, cfg.RedisPassword)
+	pong, err := clientRedis.Ping().Result()
+
+	fmt.Println("RESULT_REDIS: ", pong, err)
 
 	switch cfg.Environment {
 	case config.DebugMode:
@@ -37,7 +50,7 @@ func main() {
 	defer pgStore.CloseDB()
 
 	srvs := serviceV1.NewService(pgStore, cfg, log)
-	h := handlers.NewHandler(cfg, log, srvs)
+	h := handlers.NewHandler(cfg, log, srvs, clientRedis)
 	r := api.SetUpRouter(h, cfg)
 
 	r.Run(cfg.HTTPPort)

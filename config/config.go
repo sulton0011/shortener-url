@@ -45,6 +45,10 @@ type Config struct {
 
 	DefaultPage  string
 	DefaultLimit string
+
+	RedisHost     string
+	RedisPort     int
+	RedisPassword string
 }
 
 // Load ...
@@ -73,10 +77,12 @@ func Load() Config {
 
 	config.SecretKey = cast.ToString(getOrReturnDefaultValue("SECRET_KEY", "aLlhFUx7onmV2IBv6"))
 
-
 	config.DefaultPage = cast.ToString(getOrReturnDefaultValue("DEFAULT_PAGE", "1"))
 	config.DefaultLimit = cast.ToString(getOrReturnDefaultValue("DEFAULT_LIMIT", "10"))
 
+	config.RedisHost = cast.ToString(getOrReturnDefaultValue("REDIS_HOST", "127.0.0.1"))
+	config.RedisPort = cast.ToInt(getOrReturnDefaultValue("REDIS_PORT", 6379))
+	config.RedisPassword = cast.ToString(getOrReturnDefaultValue("REDIS_PASSWORD", ""))
 
 	return config
 }
